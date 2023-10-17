@@ -29,6 +29,16 @@ final class utils
 
     }
 
+    public static function getInstance()
+    {
+        static $instance = null;
+        if (!$instance) {
+            $instance = new self();
+        }
+
+        return $instance;
+    }
+
     private static function lang()
     {
         if( !self::$__mod ) self::$__mod = \cms_utils::get_module('AWSSDK');

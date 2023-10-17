@@ -27,7 +27,7 @@ if( isset($params['submit']) ) {
 
 }
 
-$tpl = $smarty->CreateTemplate( $this->GetTemplateResource('admin_settings_tab.tpl'), null, null, $smarty );
+$tpl = $smarty->CreateTemplate( $this->GetTemplateResource('defaultadmin.tpl'), null, null, $smarty );
 $awsregionnames = file_get_contents(dirname(__FILE__).'/doc/aws-region-names.json');
 $tpl->assign('access_region_list',json_decode($awsregionnames,true));
 $tpl->display();
