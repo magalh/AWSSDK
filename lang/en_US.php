@@ -1,7 +1,7 @@
 <?php
 #A
-$lang['admindescription'] = 'Store uploads in AWS S3';
-$lang['ask_uninstall'] = 'Are you sure you want to uninstall the AWS S3 Uploads module?';
+$lang['admindescription'] = 'Setup for AWS PHP SDK';
+$lang['ask_uninstall'] = 'Are you sure you want to uninstall the CMSMS AWSSDK module?';
 $lang['admin_save'] = "Save";
 $lang['access_key'] = 'Access keys';
 $lang['allowed'] = 'Allowed';
@@ -13,7 +13,7 @@ $lang['bucket_name'] = 'Bucket Name';
 #C
 $lang['category_label'] = 'Category:';
 $lang['cancel'] = 'Cancel';
-$lang['config'] = 'AWS S3 Module Configuration';
+$lang['config'] = 'AWSSDK Module Configuration';
 #D
 $lang['date'] = 'Date';
 $lang['delete'] = 'Delete';
@@ -25,7 +25,7 @@ $lang['friendlyname'] = 'AWSSDK Module';
 $lang['file'] = 'File';
 $lang['fielddef_allow_help'] = 'Specify a comma separated list of file extensions that are allowed. For example: pdf,gif,jpeg,jpg (keep lowercase)';
 #G
-$lang['getstarted'] = 'Get Started with AWS S3 Module';
+$lang['getstarted'] = 'Get Started with AWSSDK Module';
 #H
 $lang['help_access_key'] = <<<EOT
 <h3>Managing access keys (console)</h3>
@@ -59,7 +59,7 @@ $lang['msg_vrfy_noconn'] = 'Connection Not Established';
 #P
 $lang['page'] = 'Page';
 $lang['prompt_email'] = 'Email Address';
-$lang['postinstall'] = 'AWS S3 Module was installed';
+$lang['postinstall'] = 'AWSSDK Module was installed';
 $lang['postrotate'] = 'Action for after image rotation';
 $lang['predefined'] = 'Predefined Angles';
 $lang['prompt_copy'] = 'Copy one or more Items';

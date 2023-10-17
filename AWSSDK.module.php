@@ -3,7 +3,7 @@ class AWSSDK extends CMSModule
 {
 	const MANAGE_PERM = 'manage_AWSSDK';	
 	
-	public function GetVersion() { return '1.0'; }
+	public function GetVersion() { return '1.0.0'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
 	public function IsPluginModule() { return false; }
@@ -68,7 +68,7 @@ class AWSSDK extends CMSModule
 	  return \AWSSDK\helpers::getInstance();
 	}
 
-    public function _DisplayMessage($message,$type="alert-danger",$fetch=null)
+    public function _DisplayMessage($message,$type="alert-danger",$fetch=null,$foradmin=false)
 	{
       //helpers::_DisplayAdminMessage($error,$class);
       $mod = \cms_utils::get_module("AWSSDK");
@@ -100,6 +100,8 @@ class AWSSDK extends CMSModule
 
         $tpl->assign('errorclass', $class);
         $tpl->assign('message', $message);
+
+        if($foradmin) $tpl->assign('foradmin', true);
 	  
         if(isset($fetch)){
             $out = $tpl->fetch();

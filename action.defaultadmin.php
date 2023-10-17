@@ -3,7 +3,6 @@ if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission($this::MANAGE_PERM) ) return;
 
 $utils = new \AWSSDK\utils;
-$helpers = new \AWSSDK\helpers;
 $error = 0;
 $ready = 0;
 
