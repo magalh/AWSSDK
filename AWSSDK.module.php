@@ -15,7 +15,7 @@ class AWSSDK extends CMSModule
 	public function UninstallPreMessage() { return $this->Lang('ask_uninstall'); }
 	public function GetAdminSection() { return 'extentions'; }
 	public function InitializeAdmin() {$this->SetParameters();}
-	public function GetHelp() { return @file_get_contents(__DIR__.'/doc/help.inc'); }
+	public function GetHelp() { return @file_get_contents(__DIR__.'/README.md'); }
 	public function GetChangeLog() { return @file_get_contents(__DIR__.'/doc/changelog.inc'); }
 
 	public function is_developer_mode() {
