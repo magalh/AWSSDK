@@ -1,8 +1,19 @@
-<h3>What is this?</h3>
-<h3>How do I use it?</h3>
-<h3>Support</h3>
+<h3>What Does This Do?</h3>
+<p>This module provides no end user functionality.  It is designed to be integrated into other modules to provide AWS SDK API access.  That's it, nothing more.</p>
+<h3>How Do I Use It</h3>
+<p>This module provides a simple wrapper around all of the methods and variables of AWS PHP SDK. It is designed for use by other module developers.</p>
+<h3>Feedback/Support</h3>
+<p>This module does not include commercial support. However, there are a number of resources available to help you with it:</p>
+<ul>
+<li>For the latest version of this module or to file a Feature Request or Bug Report, please visit the Module Forge
+<a href="http://dev.cmsmadesimple.org/projects/AWSSDK" target="_blank">AWSSDK Page</a>.</li>
+<li>Additional discussion of this module may also be found in the <a href="https://forum.cmsmadesimple.org/viewtopic.php?f=7&t=83400">AWSSDK forum topic</a>. You are warmly invited to open a new topic if you didn't find an answer to your question.</li>
+<li>Lastly, if you enjoy this module, use it on a commercial website or would like to encourage future development, you might consider just a small donation. Any kind of feedback will be much appreciated.<br>
+<a href="https://www.paypal.com/donate/?hosted_button_id=FWHABZUN3NC4N" target="_blank"><img src="https://raw.githubusercontent.com/aha999/DonateButtons/master/paypal-donate-icon-7.png" width="120" ></a><br>
+	</li>
+</ul>
 <h3>Interested in development?</h3>
-<p><a href="https://plugins.trac.wordpress.org/browser/wp-s3/">Browse the code</a>, check out the <a href="https://plugins.svn.wordpress.org/wp-s3/">SVN repository</a>, or subscribe to the <a href="https://plugins.trac.wordpress.org/log/wp-s3/">development log</a> by <a href="https://plugins.trac.wordpress.org/log/wp-s3/?limit=100&amp;mode=stop_on_copy&amp;format=rss">RSS</a>.</p>
+<p>Check out the <a href="https://github.com/magalh/AWSSDK">Github repository</a>.</p>
 <h3>Copyright and License</h3>
 <p>Copyright &copy; 2023, Magal Hezi <a href="mailto:h_magal@hotmail.com">&lt;h_magal@hotmail.com&gt;</a>. All Rights Are Reserved.</p>
 <p>This program is free software; you can redistribute it and/or modify
