@@ -2,16 +2,12 @@
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission($this::MANAGE_PERM) ) return;
 
-$utils = new \AWSSDK\utils;
+use \AWSSDK\utils;
+
+$utils = new utils();
 $error = 0;
 $ready = 0;
-
-
-if($utils->validate()){
-	$ready = 1;
-} else {
-	$ready = 0;
-}
+$message = '';
 
 if( isset($params['submit']) ) {
 
@@ -26,9 +22,17 @@ if( isset($params['submit']) ) {
 
 }
 
+if(!$utils->is_valid()){
+    //$utils->do_debug = 1;
+    $utils->getErrors();
+    //print_r($utils->errors_array);
+    //$this->ShowErrors($utils->errors_array);
+    $message = $this->_DisplayMessage($utils->errors_array,"alert-danger",true);
+}
+
 $tpl = $smarty->CreateTemplate( $this->GetTemplateResource('defaultadmin.tpl'), null, null, $smarty );
-$awsregionnames = file_get_contents(dirname(__FILE__).'/doc/aws-region-names.json');
-$tpl->assign('access_region_list',json_decode($awsregionnames,true));
+$tpl->assign('access_region_list',$this->get_regions_options());
+$tpl->assign('message',$message);
 $tpl->display();
 
 ?>

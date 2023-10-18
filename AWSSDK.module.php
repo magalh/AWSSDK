@@ -9,6 +9,7 @@ class AWSSDK extends CMSModule
 	public function IsPluginModule() { return false; }
 	public function HasAdmin() { return TRUE; }
 	public function VisibleToAdminUser() { return $this->CheckPermission(self::MANAGE_PERM); }
+    public function GetHeaderHTML() { return $this->_output_header_javascript(); }
 	public function GetAuthor() { return 'Magal Hezi'; }
 	public function GetAuthorEmail() { return 'h_magal@hotmail.com'; }
 	public function UninstallPreMessage() { return $this->Lang('ask_uninstall'); }
@@ -25,6 +26,19 @@ class AWSSDK extends CMSModule
 			return false;
 		}
 	}
+
+    protected function _output_header_javascript()
+    {
+        $out = '';
+        $urlpath = $this->GetModuleURLPath();
+        $fmt = '<link rel="stylesheet" type="text/css" href="%s/%s"/>';
+        $cssfiles = array('css/style.css');
+        foreach( $cssfiles as $one ) {
+            $out .= sprintf($fmt,$urlpath,$one);
+        }
+
+        return $out;
+    }
 
     final public function GetSettingsValues()
     {
@@ -68,12 +82,15 @@ class AWSSDK extends CMSModule
 	  return \AWSSDK\helpers::getInstance();
 	}
 
-    public function _DisplayMessage($message,$type="alert-danger",$fetch=null,$foradmin=false)
+    public function _DisplayMessage($message,$type="alert-danger",$fetch=null)
 	{
-      //helpers::_DisplayAdminMessage($error,$class);
-      $mod = \cms_utils::get_module("AWSSDK");
+
 	  $smarty = cmsms()->GetSmarty();
-	  $tpl = $smarty->CreateTemplate($mod->GetTemplateResource('message.tpl'),null,null,$smarty);
+	  $tpl = $smarty->CreateTemplate($this->GetTemplateResource('message.tpl'),null,null,$smarty);
+
+      if (is_array($message)) {
+        $message = implode("<br>",$message);
+      }
 
       switch ($type) {
             case ($type == "alert-info" || $type == "info"):
@@ -100,8 +117,6 @@ class AWSSDK extends CMSModule
 
         $tpl->assign('errorclass', $class);
         $tpl->assign('message', $message);
-
-        if($foradmin) $tpl->assign('foradmin', true);
 	  
         if(isset($fetch)){
             $out = $tpl->fetch();
@@ -121,6 +136,15 @@ class AWSSDK extends CMSModule
         if( sha1($this->config['dbpassword'].__FILE__.$filename) == $sig ) return $filename;
     }
 
+    public function get_regions_options(){
+        $awsregionnames = file_get_contents(dirname(__FILE__).'/doc/aws-region-names.json');
+        return json_decode($awsregionnames,true);
+    }
+
+    public function getCredentials(){
+        $utils = new \AWSSDK\utils;
+        return $utils::get_credentials();
+    }
 
 }
 

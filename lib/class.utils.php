@@ -2,24 +2,93 @@
 namespace AWSSDK;
 
 require dirname(__DIR__, 1).'/SDK/aws-autoloader.php';
-
-use \Aws\S3\S3Client;  
+ 
 use \Aws\Exception\AwsException;
 use \Aws\Credentials\Credentials;
 
 final class utils
 {
 
-    private $s3Client = null;
-
     public function __construct (){
         $this->mod = self::get_mod();
-        $this->s3Client = null;
-        $this->access_secret_key = $this->mod->GetPreference('access_secret_key');
-        $this->access_key = $this->mod->GetPreference('access_key');
-        $this->errors = array();
+        $this->errors = [];
+        $this->connected = false;
+        $this->debug_level = 0;
     }
 
+    public function connect()
+    {
+        
+        $this->do_debug = $this->debug_level;
+
+/*        if ($this->connected) {
+            return true;
+        }*/
+
+        set_error_handler(array($this, 'catchWarning'));
+
+        try {
+
+            if (false === $this->isready()) {
+                $this->connected = false;
+                return false;
+            }
+
+            $credentials = self::get_credentials();
+
+            print_r($credentials);
+
+
+        } catch (AwsException $e) {
+
+            $this->setError(array(
+                'error' => "Failed to connect to AWS server",
+                'errno' => $e->getAwsErrorCode(),
+                'errstr' => $e->getAwsErrorMessage()
+            ));
+
+            $this->aws_conn = false;
+            return false;
+        }
+
+        restore_error_handler();
+
+    }
+
+    public function is_valid()
+    {
+        if( !$this->isready() ) return false;
+        return TRUE;
+    }
+
+    private function isready() {
+
+        $mod = $this->mod;
+        $settings = $mod->GetSettingsValues();
+        if(empty($settings)) return false;
+
+        $data = array('access_key','access_secret_key');
+
+        foreach ($data as $key)
+        {
+            $item = $mod->GetPreference($key);
+            if($item=="" or $item==null)
+            {
+                $this->setError(array(
+                    'error' => "Failed to validate minimum requirements",
+                    'errno' => 500,
+                    'errstr' => $mod->lang($key). " ".$mod->lang("required")
+                ));
+            }
+        }
+        
+        if(!empty($this->errors)){
+            return false;
+        }
+
+        return true;
+	}
+    
     public static function getInstance()
     {
         static $instance = null;
@@ -30,95 +99,62 @@ final class utils
         return $instance;
     }
 
-    public function validate() {
-
-        $mod = $this->mod;
-        $settings = $mod->GetSettingsValues();
-        if(empty($settings)) return false;
-
-        try {
-            $data = array('access_key','access_secret_key');
-
-            foreach ($data as $key)
-            {
-                $item = $mod->GetPreference($key);
-                if($item=="" or $item==null)
-                {
-                    $this->errors[] = $mod->lang($key). " ".$mod->lang("required") ;
-                }
-            }
-            
-            if(!empty($this->errors)){
-                throw new \AWSSDK\Exception($this->errors,"slide-danger",null,true);
-            }
-
-            $s3 = self::getS3Client();
-            if (is_array($s3) && !$s3['conn']){
-                $this->errors[] = $s3['message'];
-                throw new \AWSSDK\Exception($this->errors,"slide-danger",null,true);
-            }
-            $this->s3Client = $s3;
-
-        }
-        catch (\AWSSDK\Exception $e) {
-            $mod->_DisplayMessage($e->getText(),$e->getType());
-            return false;
-        }
-
-        $mod->_DisplayMessage($this->lang('msg_vrfy_integrityverified'),"success");
-        //$smarty->assign("message",$message);
-        return true;
-	}
-    
-
-    public static function getS3Client(){
-
-        $result = array();
-        $result['conn'] = true;
-
-        try {
-
-            $s3Client = new S3Client([
-                'credentials' => self::get_credentials(),
-                'region' => self::get_mod()->GetPreference('access_region'),
-                'version' => 'latest'
-                ]);
-
-            $buckets = $s3Client->listBuckets();
-        } catch (AwsException $e) {
-            $result['conn'] = false;
-            $result['message'] = $e->getAwsErrorMessage();
-            print_r($result);
-            return $result;
-        }
-
-        return $s3Client;
-    }
-    
     public static function get_mod(){
         static $_mod;
         if( !$_mod ) $_mod = \cms_utils::get_module('AWSSDK');
         return $_mod;
     }
 
-    private static function get_credentials(){
+    public static function get_credentials(){
         $mod = self::get_mod();
         $credentials = new Credentials($mod->GetPreference('access_key'),$mod->GetPreference('access_secret_key'));
         return $credentials;
     }
 
-    public static function sort_by_key($array, $key) {
-        usort($array, function($a, $b) use ($key) {
-            return $a[$key] - $b[$key];
-        });
-        return $array;
+    protected function setError($error)
+    {
+        $this->errors[] = $error;
+        if ($this->do_debug >= 1) {
+            echo '<pre>';
+            foreach ($this->errors as $error) {
+                print_r($error);
+            }
+            echo '</pre>';
+        }
     }
 
-    public static function sortByProperty($array, $property) {
-        usort($array, function($a, $b) use ($property) {
-            return strcmp($a->$property, $b->$property);
-        });
-        return $array;
+    /**
+     * Get an array of error messages, if any.
+     * @return array
+     */
+    public function getErrors()
+    {
+        $this->errors_array = [];
+        
+        if ($this->do_debug >= 1) {
+            echo '<pre>';
+            foreach ($this->errors as $error) {
+                print_r($error);
+            }
+            echo '</pre>';
+        }
+
+        foreach ($this->errors as $error) {
+            $this->errors_array[] = $error['errstr'];
+        }
+
+        return $this->errors;
+    }
+
+    protected function catchWarning($errno, $errstr, $errfile, $errline)
+    {
+        $this->setError(array(
+            'error' => "Connecting to the AWS server raised a PHP warning: ",
+            'errno' => $errno,
+            'errstr' => $errstr,
+            'errfile' => $errfile,
+            'errline' => $errline
+        ));
     }
 
 }
