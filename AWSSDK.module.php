@@ -74,7 +74,7 @@ class AWSSDK extends CMSModule
 
     public function getUtils()
 	{
-	  return \AWSSDK\utils::getInstance();
+	  return \AWSSDK\aws_sdk_utils::getInstance();
 	}
 
     public function getHelpers()
@@ -127,23 +127,39 @@ class AWSSDK extends CMSModule
       
 	}
 
-    protected function encodefilename($filename) {
-        return base64_encode(sha1($this->config['dbpassword'].__FILE__.$filename).'|'.$filename);
-    }
-
-    protected function decodefilename($encodedfilename) {
-        list($sig,$filename) = explode('|',base64_decode($encodedfilename),2);
-        if( sha1($this->config['dbpassword'].__FILE__.$filename) == $sig ) return $filename;
-    }
-
     public function get_regions_options(){
         $awsregionnames = file_get_contents(dirname(__FILE__).'/doc/aws-region-names.json');
         return json_decode($awsregionnames,true);
     }
 
     public function getCredentials(){
-        $utils = new \AWSSDK\utils;
+        $utils = new \AWSSDK\aws_sdk_utils;
         return $utils::get_credentials();
+    }
+
+    public function resolve_alias_or_id($txt, int $dflt = NULL)
+    {
+        $txt = \trim((string)$txt);
+        if(!$txt)
+        {
+        return $dflt;
+        }
+        $manager = $this->cms->GetHierarchyManager();
+        $node    = NULL;
+        if(\is_numeric($txt) && (int)$txt > 0)
+        {
+        $node = $manager->find_by_tag('id', (int)$txt);
+        }
+        else
+        {
+        $node = $manager->find_by_tag('alias', $txt);
+        }
+        if($node)
+        {
+        return (int)$node->get_tag('id');
+        }
+        
+        return $dflt;
     }
 
 }

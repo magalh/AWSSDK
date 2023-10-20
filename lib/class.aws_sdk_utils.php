@@ -1,12 +1,12 @@
 <?php
 namespace AWSSDK;
 
-require dirname(__DIR__, 1).'/SDK/aws-autoloader.php';
+require_once dirname(__DIR__, 1).'/lib/SDK/aws-autoloader.php';
  
 use \Aws\Exception\AwsException;
 use \Aws\Credentials\Credentials;
 
-final class utils
+final class aws_sdk_utils
 {
 
     public function __construct (){

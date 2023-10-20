@@ -2,9 +2,9 @@
 if( !defined('CMS_VERSION') ) exit;
 if( !$this->CheckPermission($this::MANAGE_PERM) ) return;
 
-use \AWSSDK\utils;
+use \AWSSDK\aws_sdk_utils;
 
-$utils = new utils();
+$utils = new aws_sdk_utils();
 $error = 0;
 $ready = 0;
 $message = '';
