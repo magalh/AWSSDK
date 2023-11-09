@@ -22,5 +22,5 @@
 </div>
 {form_end}
 {if $mod->is_developer_mode()}
-  {get_template_vars}
+  {*get_template_vars*}
 {/if}
