@@ -33,7 +33,7 @@ require_once dirname(__DIR__, 1).'/lib/SDK/aws-autoloader.php';
 use \Aws\Exception\AwsException;
 use \Aws\Credentials\Credentials;
 
-final class aws_sdk_utils
+final class utils
 {
 
     public function __construct (){

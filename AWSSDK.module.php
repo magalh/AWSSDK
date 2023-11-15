@@ -101,7 +101,7 @@ class AWSSDK extends CMSModule
 
     public function getUtils()
 	{
-	  return \AWSSDK\aws_sdk_utils::getInstance();
+	  return \AWSSDK\utils::getInstance();
 	}
 
     public function getHelpers()
@@ -160,7 +160,7 @@ class AWSSDK extends CMSModule
     }
 
     public function getCredentials(){
-        $utils = new \AWSSDK\aws_sdk_utils;
+        $utils = new \AWSSDK\utils;
         return $utils::get_credentials();
     }
 
@@ -189,14 +189,7 @@ class AWSSDK extends CMSModule
         return $dflt;
     }
 
-    public function encodefilename($filename) {
-        return base64_encode(sha1($this->config['dbpassword'].__FILE__.$filename).'|'.$filename);
-    }
 
-    public function decodefilename($encodedfilename) {
-        list($sig,$filename) = explode('|',base64_decode($encodedfilename),2);
-        if( sha1($this->config['dbpassword'].__FILE__.$filename) == $sig ) return $filename;
-    }
 
 }
 
