@@ -30,17 +30,16 @@ class AWSSDK extends CMSModule
 {
 	const MANAGE_PERM = 'manage_AWSSDK';	
 	
-	public function GetVersion() { return '1.0.0'; }
+	public function GetVersion() { return '1.1.0'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
 	public function IsPluginModule() { return false; }
-	public function HasAdmin() { return TRUE; }
+	public function HasAdmin() { return false; }
 	public function VisibleToAdminUser() { return $this->CheckPermission(self::MANAGE_PERM); }
     public function GetHeaderHTML() { return $this->_output_header_javascript(); }
 	public function GetAuthor() { return 'Magal Hezi'; }
 	public function GetAuthorEmail() { return 'h_magal@hotmail.com'; }
 	public function UninstallPreMessage() { return $this->Lang('ask_uninstall'); }
-	public function GetAdminSection() { return 'extentions'; }
 	public function InitializeAdmin() {$this->SetParameters();}
 	public function GetHelp() { return @file_get_contents(__DIR__.'/README.md'); }
 	public function GetChangeLog() { return @file_get_contents(__DIR__.'/doc/changelog.inc'); }
@@ -54,59 +53,9 @@ class AWSSDK extends CMSModule
 		}
 	}
 
-    protected function _output_header_javascript()
-    {
-        $out = '';
-        $urlpath = $this->GetModuleURLPath();
-        $fmt = '<link rel="stylesheet" type="text/css" href="%s/%s"/>';
-        $cssfiles = array('css/style.css');
-        foreach( $cssfiles as $one ) {
-            $out .= sprintf($fmt,$urlpath,$one);
-        }
-
-        return $out;
-    }
-
-    final public function GetSettingsValues()
-    {
-        $prefix = $this->GetName().'_mapi_pref_';
-        $list = cms_siteprefs::list_by_prefix($prefix);
-        if( !$list || !count($list) ) return [];
-        $out = [];
-        foreach( $list as $prefname ) {
-            $tmp = cms_siteprefs::get($prefname);
-            if( !$tmp ) continue;
-            $out[substr($prefname, strlen($prefix))] = $tmp;
-        }
-
-        if( count($out) ) return $out;
-
-    }
-    
-    final public function GetOptionValue($key, $default = '')
-    {
-        $value = $this->GetPreference($key);
-        if(isset($value) && $value !== '') {
-            return $value;
-        } else {
-            return $default;
-        }
-        
-    }
-    
-    final public function SetOptionValue($key, $value) : void
-    {
-      $this->SetPreference($key,$value);
-    }
-
     public function getUtils()
 	{
 	  return \AWSSDK\utils::getInstance();
-	}
-
-    public function getHelpers()
-	{
-	  return \AWSSDK\helpers::getInstance();
 	}
 
     public function _DisplayMessage($message,$type="alert-danger",$fetch=null)
