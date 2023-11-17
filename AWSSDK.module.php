@@ -28,7 +28,7 @@
 
 class AWSSDK extends CMSModule
 {
-	const MANAGE_PERM = 'manage_AWSSDK';	
+	const MANAGE_PERM = 'manage_AWSSDK';
 	
 	public function GetVersion() { return '1.1.0'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
