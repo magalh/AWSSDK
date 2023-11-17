@@ -1,3 +1,4 @@
+<a href="https://aws.amazon.com/what-is-cloud-computing"><img src="https://d1.awsstatic.com/logos/aws-logo-lockups/poweredbyaws/Powered-By_logo-horiz_RGB.87c70af8a8a34b68606524ade6261db083947a14.png" alt="Powered by AWS Cloud Computing" width="200" style="float:right"></a>
 <h3>What Does This Do?</h3>
 <p>This module provides no end user functionality.  It is designed to be integrated into other modules to provide AWS SDK API access.  That's it, nothing more.</p>
 <h3>How Do I Use It</h3>
@@ -32,3 +33,5 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 Or read it <a href="http://www.gnu.org/licenses/licenses.html#GPL">online</a></p>
+
+<p><strong>Amazon Web Services, AWS, and the Powered by AWS logo are trademarks of Amazon.com, Inc. or its affiliates</strong></p>
