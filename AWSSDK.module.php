@@ -44,6 +44,27 @@ class AWSSDK extends CMSModule
 	public function GetHelp() { return @file_get_contents(__DIR__.'/README.md'); }
 	public function GetChangeLog() { return @file_get_contents(__DIR__.'/doc/changelog.inc'); }
 
+
+    public function __construct(){
+        parent::__construct();
+
+        $smarty = \CmsApp::get_instance()->GetSmarty();
+        if( !$smarty ) return;
+        $smarty->assign('sdk_mod',$this);
+        if ($this->is_developer_mode()){
+            $smarty->assign('isdev',true);
+        }
+
+        \spl_autoload_register([$this, 'autoload']);
+    }
+
+    public function autoload($classname) : bool
+    {
+        $path = $this->GetModulePath() . '/lib';
+        require_once $path.'/aws.phar';
+        return TRUE;
+    }
+
 	public function is_developer_mode() {
 		$config = \cms_config::get_instance();
 		if( isset($config['developer_mode']) && $config['developer_mode'] ) {
