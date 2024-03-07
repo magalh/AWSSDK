@@ -30,7 +30,7 @@ class AWSSDK extends CMSModule
 {
 	const MANAGE_PERM = 'manage_AWSSDK';
 	
-	public function GetVersion() { return '1.1.0'; }
+	public function GetVersion() { return '1.1.1'; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
 	public function IsPluginModule() { return false; }
@@ -61,7 +61,12 @@ class AWSSDK extends CMSModule
     public function autoload($classname) : bool
     {
         $path = $this->GetModulePath() . '/lib';
-        require_once $path.'/aws.phar';
+        $archivePath = $path.'/aws.phar';
+
+        if (file_exists($archivePath)) {
+            require_once $archivePath;
+        }
+
         return TRUE;
     }
 

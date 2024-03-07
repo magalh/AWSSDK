@@ -184,5 +184,32 @@ final class utils
         ));
     }
 
+    public function expandAndRemovePhar() {
+        try {
+            $zipfile = 'aws.phar.zip';
+            $path = $this->mod->GetModulePath() . '/lib';
+            $archivePath = $path . '/' . $zipfile;
+            $archivePath = str_replace('\\','/',$archivePath); // stupid windoze
+            $destination = $path;
+    
+            if (!file_exists($archivePath)) {
+                throw new \Exception("File not found: {$archivePath}");
+            }
+
+            $zip = new \ZipArchive;
+            $res = $zip->open($archivePath);
+            if ($res === TRUE) {
+                // extract it to the path we determined above
+                $zip->extractTo($destination);
+                $zip->close();
+            } else {
+                throw new \Exception("Error unzipping");
+            }
+
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
 }
 ?>
