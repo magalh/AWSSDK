@@ -5,3 +5,4 @@ error_log
 .dwsync.xml
 .vscode/
 moduleinfo.ini
+lib/aws.phar
