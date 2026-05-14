@@ -1,0 +1,11 @@
+# Files and directories to exclude from distribution packages
+.git
+.gitignore
+.distignore
+.kiro
+.assets
+releases
+README.md
+moduleinfo.ini
+lib/aws.phar
+# Note: lib/aws.phar.zip is intentionally included — it's extracted on install/upgrade

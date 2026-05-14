@@ -63,11 +63,8 @@ final class utils
 
             $credentials = self::get_credentials();
 
-            print_r($credentials);
-
-
         } catch (AwsException $e) {
-
+            audit('', 'AWSSDK', 'AWS connection failed: ' . $e->getAwsErrorMessage());
             $this->setError(array(
                 'error' => "Failed to connect to AWS server",
                 'errno' => $e->getAwsErrorCode(),
@@ -134,7 +131,31 @@ final class utils
 
     public static function get_credentials(){
         $mod = self::get_mod();
-        $credentials = new Credentials($mod->GetPreference('access_key'),$mod->GetPreference('access_secret_key'));
+        $auth_method = $mod->GetPreference('auth_method', 'credentials');
+        
+        if ($auth_method === 'profile') {
+            $profile = $mod->GetPreference('aws_profile', 'default');
+            $credsFile = $mod->GetPreference('credentials_file');
+            if ($credsFile && file_exists($credsFile)) {
+                $provider = \Aws\Credentials\CredentialProvider::ini($profile, $credsFile);
+                return $provider()->wait();
+            }
+            // Fall back to default credentials file location
+            $provider = \Aws\Credentials\CredentialProvider::ini($profile);
+            return $provider()->wait();
+        }
+        
+        if ($auth_method === 'iam_role') {
+            // Return null to let the SDK use the default credential provider chain
+            // (EC2 instance metadata, ECS task role, etc.)
+            return null;
+        }
+        
+        // Default: explicit access keys
+        $credentials = new Credentials(
+            $mod->GetPreference('access_key'),
+            $mod->GetPreference('access_secret_key')
+        );
         return $credentials;
     }
 
@@ -142,11 +163,7 @@ final class utils
     {
         $this->errors[] = $error;
         if ($this->do_debug >= 1) {
-            echo '<pre>';
-            foreach ($this->errors as $error) {
-                print_r($error);
-            }
-            echo '</pre>';
+            error_log('AWSSDK: ' . print_r($error, true));
         }
     }
 
@@ -159,11 +176,7 @@ final class utils
         $this->errors_array = [];
         
         if ($this->do_debug >= 1) {
-            echo '<pre>';
-            foreach ($this->errors as $error) {
-                print_r($error);
-            }
-            echo '</pre>';
+            error_log('AWSSDK errors: ' . print_r($this->errors, true));
         }
 
         foreach ($this->errors as $error) {
@@ -206,8 +219,8 @@ final class utils
                 throw new \Exception("Error unzipping");
             }
 
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+        } catch (\Exception $e) {
+            audit('', 'AWSSDK', 'Failed to extract aws.phar.zip: ' . $e->getMessage());
         }
     }
 

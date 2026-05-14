@@ -1,0 +1,3 @@
+# Force LF line endings for files read by bash scripts
+.distignore text eol=lf
+.gitignore text eol=lf

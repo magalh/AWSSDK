@@ -30,19 +30,29 @@ class AWSSDK extends CMSModule
 {
 	const MANAGE_PERM = 'manage_AWSSDK';
 	
-	public function GetVersion() { return '1.1.2'; }
+	public function GetName() { return 'AWSSDK'; }
+	public function GetVersion() { return '1.2.0'; }
+	public function MinimumCMSVersion() { return '2.2.22'; }
+	public function GetDependencies() { return []; }
 	public function GetFriendlyName() { return $this->Lang('friendlyname'); }
 	public function GetAdminDescription() { return $this->Lang('admindescription'); }
 	public function IsPluginModule() { return false; }
-	public function HasAdmin() { return false; }
+	public function HasAdmin() { return true; }
+    public function GetAdminSection() { return 'extensions'; }
 	public function VisibleToAdminUser() { return $this->CheckPermission(self::MANAGE_PERM); }
     public function GetHeaderHTML() { return $this->_output_header_javascript(); }
-	public function GetAuthor() { return 'Magal Hezi'; }
-	public function GetAuthorEmail() { return 'h_magal@hotmail.com'; }
+	public function GetAuthor() { return 'Pixel Solutions'; }
+	public function GetAuthorEmail() { return 'info@pixelsolutions.biz'; }
 	public function UninstallPreMessage() { return $this->Lang('ask_uninstall'); }
 	public function InitializeAdmin() {$this->SetParameters();}
-	public function GetHelp() { return @file_get_contents(__DIR__.'/README.md'); }
-	public function GetChangeLog() { return @file_get_contents(__DIR__.'/doc/changelog.inc'); }
+	public function GetHelp() {
+		$fn = __DIR__ . '/doc/help.inc';
+		return (is_file($fn)) ? file_get_contents($fn) : '';
+	}
+	public function GetChangeLog() {
+		$fn = __DIR__ . '/doc/changelog.inc';
+		return (is_file($fn)) ? file_get_contents($fn) : '';
+	}
 
 
     public function __construct(){
@@ -137,6 +147,39 @@ class AWSSDK extends CMSModule
     public function getCredentials(){
         $utils = new \AWSSDK\utils;
         return $utils::get_credentials();
+    }
+
+    /**
+     * Detect AWS Profile credentials for display in admin panel.
+     * @return array|null
+     */
+    public function _detectProfileCredentials()
+    {
+        try {
+            require_once cms_join_path($this->GetModulePath(), 'lib', 'aws.phar');
+
+            $config = \cms_config::get_instance();
+            $profile = $this->GetPreference('aws_profile', 'default');
+
+            $credsFile = $this->GetPreference('credentials_file');
+            if (!$credsFile) {
+                $credsFile = $config['root_path'] . DIRECTORY_SEPARATOR . '.aws' . DIRECTORY_SEPARATOR . 'credentials';
+            }
+
+            if (!file_exists($credsFile)) {
+                return ['error' => 'No AWS credentials file found. Expected at: ' . $credsFile];
+            }
+
+            $provider = \Aws\Credentials\CredentialProvider::ini($profile, $credsFile);
+            $creds = $provider()->wait();
+            return [
+                'access_key' => substr($creds->getAccessKeyId(), 0, 8) . '...',
+                'source' => "Profile: {$profile}"
+            ];
+        } catch (\Exception $e) {
+            audit('', 'AWSSDK', 'Credential detection failed: ' . $e->getMessage());
+            return ['error' => $e->getMessage()];
+        }
     }
 
     public function resolve_alias_or_id($txt, int $dflt = NULL)

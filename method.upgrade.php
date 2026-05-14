@@ -1,12 +1,9 @@
 <?php
+#--------------------------------------------------
+# See LICENSE for full license information.
+#--------------------------------------------------
 if (!defined('CMS_VERSION')) exit;
 
-switch ($oldversion)
-{
-	case "1.0.0":
-	case "1.1.0":
-	case "1.1.1":
-    $utils = new \AWSSDK\utils;
-    $utils->expandAndRemovePhar();
-}
-?>
+// Always overwrite the aws.phar file on upgrade
+$utils = new \AWSSDK\utils;
+$utils->expandAndRemovePhar();

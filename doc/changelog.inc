@@ -1,6 +1,20 @@
 <ul>
-  <li>VERSION: 1.1.2 DATED: 19-FEBRUARY-2026
-    <p>Updated AWS SDK from 3.286.3 to 3.369.38</p>
+  <li>VERSION: 1.2.0 DATED: 14-MAY-2026
+    <ul>
+      <li>Added 3 authentication methods: Access Keys, AWS Profile, and IAM Role (EC2/ECS)</li>
+      <li>AWS Profile name is now a saved preference (no longer relies on AWS_PROFILE env var)</li>
+      <li>Fixed GetAdminSection typo ("extentions" → "extensions")</li>
+      <li>Added GetName(), MinimumCMSVersion(), GetDependencies() metadata methods</li>
+      <li>Removed debug print_r() statements, replaced with error_log()</li>
+      <li>Removed @ error suppression, using proper precondition checks</li>
+      <li>Added audit() logging to all catch blocks</li>
+      <li>On uninstall: now removes the extracted aws.phar file</li>
+      <li>On upgrade: always re-extracts aws.phar from zip to ensure latest version</li>
+      <li>Added doc/LICENSE, doc/help.inc, assets/ with module icons and banners</li>
+    </ul>
+  </li>
+  <li>VERSION: 1.1.2 DATED: 20-DECEMBER-2023
+    <p>Added IAM Role / AWS Profile authentication support</p>
   </li>
   <li>VERSION: 1.1.0 DATED: 16-NOVEMBER-2023
     <p>Removed admin dashboard</p>

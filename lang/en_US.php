@@ -83,6 +83,20 @@ $lang['required'] = 'Required';
 
 #S
 $lang['submit'] = 'Submit';
+$lang['settings_saved'] = 'Settings saved successfully';
+$lang['auth_method'] = 'Authentication Method';
+$lang['auth_credentials'] = 'Access Keys';
+$lang['auth_profile'] = 'AWS Profile';
+$lang['auth_iam_role'] = 'IAM Role (EC2/ECS)';
+$lang['help_auth_method'] = 'Access Keys: enter credentials directly. AWS Profile: use a named profile from ~/.aws/credentials. IAM Role: automatic credentials on EC2/ECS instances.';
+$lang['help_auth_credentials_only'] = 'Only required when using Access Keys authentication method';
+$lang['aws_profile_name'] = 'Profile Name';
+$lang['help_aws_profile'] = 'The named profile from your AWS credentials file (e.g. "default", "production"). This is saved and used for all SDK calls.';
+$lang['help_iam_role'] = 'No configuration needed. The SDK will automatically obtain credentials from the EC2 instance metadata service or ECS task role. Only use this on AWS infrastructure.';
+$lang['detected_credentials'] = 'Detected Credentials';
+$lang['profile'] = 'Profile';
+$lang['credentials_file'] = 'AWS Credentials File Path';
+$lang['help_credentials_file'] = 'Full path to AWS credentials file. Leave empty to use the default (~/.aws/credentials).';
 $lang['access_key'] = 'AWS Access Key ID';
 $lang['access_secret_key'] = 'AWS Secret Access Key';
 $lang['bucket_name'] = 'AWS Bucket Name';

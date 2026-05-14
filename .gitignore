@@ -5,3 +5,9 @@ error_log
 .vscode/
 moduleinfo.ini
 lib/aws.phar
+.kiro/
+.assets
+releases/
+build.sh
+composer.json
+composer.lock
