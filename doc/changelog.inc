@@ -1,6 +1,9 @@
 <ul>
   <li>VERSION: 1.2.0 DATED: 14-MAY-2026
     <ul>
+      <li>Added "Test Connection" button — lists S3 buckets in us-east-1 to verify credentials</li>
+      <li>Added automatic Windows UNC-to-Linux path normalization for credentials file</li>
+      <li>Fixed credentials file fallback to use ~/.aws/credentials instead of CMSMS root path</li>
       <li>Added 3 authentication methods: Access Keys, AWS Profile, and IAM Role (EC2/ECS)</li>
       <li>AWS Profile name is now a saved preference (no longer relies on AWS_PROFILE env var)</li>
       <li>Fixed GetAdminSection typo ("extentions" → "extensions")</li>

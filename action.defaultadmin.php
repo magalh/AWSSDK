@@ -11,7 +11,14 @@ if (isset($params['submit'])) {
     $this->SetPreference('access_key', trim($params['access_key']));
     $this->SetPreference('access_secret_key', trim($params['access_secret_key']));
     $this->SetPreference('aws_profile', trim($params['aws_profile']));
-    $this->SetPreference('credentials_file', trim($params['credentials_file']));
+
+    // Normalize Windows UNC WSL paths to native Linux paths
+    $credsFile = trim($params['credentials_file']);
+    if ($credsFile && preg_match('#^\\\\\\\\wsl[.$]localhost\\\\[^\\\\]+(.+)$#i', $credsFile, $m)) {
+        $credsFile = str_replace('\\', '/', $m[1]);
+    }
+    $this->SetPreference('credentials_file', $credsFile);
+
     $this->SetMessage($this->Lang('settings_saved'));
     $this->RedirectToAdminTab();
 }

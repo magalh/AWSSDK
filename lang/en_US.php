@@ -13,7 +13,7 @@ $lang['bucket_name'] = 'Bucket Name';
 #C
 $lang['category_label'] = 'Category:';
 $lang['cancel'] = 'Cancel';
-$lang['config'] = 'AWSSDK Module Configuration';
+$lang['config'] = 'AWSSDK Configuration';
 #D
 $lang['date'] = 'Date';
 $lang['delete'] = 'Delete';
@@ -21,11 +21,11 @@ $lang['delete'] = 'Delete';
 $lang['error'] = 'Error';
 $lang['expiry_interval'] = 'Remove cache files that are older than the specified number of minutes';
 #F
-$lang['friendlyname'] = 'AWSSDK Module';
+$lang['friendlyname'] = 'AWSSDK';
 $lang['file'] = 'File';
 $lang['fielddef_allow_help'] = 'Specify a comma separated list of file extensions that are allowed. For example: pdf,gif,jpeg,jpg (keep lowercase)';
 #G
-$lang['getstarted'] = 'Get Started with AWSSDK Module';
+$lang['getstarted'] = 'Get Started with AWSSDK';
 #H
 $lang['help_access_key'] = <<<EOT
 <h3>Managing access keys (console)</h3>
@@ -103,6 +103,10 @@ $lang['bucket_name'] = 'AWS Bucket Name';
 $lang['custom_url'] = 'Custom URL';
 $lang['sorry_nofiles'] = 'Sorry, we could not find any files';
 #T
+$lang['test_connection'] = 'Test Connection';
+$lang['testing'] = 'Testing';
+$lang['connection_success'] = 'Connection successful!';
+$lang['buckets_found'] = 'S3 Buckets found (us-east-1)';
 $lang['type'] = 'Type';
 $lang['type_AWSSDK'] = 'AWSSDK';
 $lang['type_detail'] = 'Detail';

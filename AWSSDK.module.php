@@ -158,19 +158,30 @@ class AWSSDK extends CMSModule
         try {
             require_once cms_join_path($this->GetModulePath(), 'lib', 'aws.phar');
 
-            $config = \cms_config::get_instance();
             $profile = $this->GetPreference('aws_profile', 'default');
 
             $credsFile = $this->GetPreference('credentials_file');
-            if (!$credsFile) {
-                $credsFile = $config['root_path'] . DIRECTORY_SEPARATOR . '.aws' . DIRECTORY_SEPARATOR . 'credentials';
+
+            // Normalize Windows UNC WSL paths to native Linux paths
+            if ($credsFile && preg_match('#^\\\\\\\\wsl[.$]localhost\\\\[^\\\\]+(.+)$#i', $credsFile, $m)) {
+                $credsFile = str_replace('\\', '/', $m[1]);
             }
 
-            if (!file_exists($credsFile)) {
-                return ['error' => 'No AWS credentials file found. Expected at: ' . $credsFile];
+            if ($credsFile) {
+                if (!file_exists($credsFile)) {
+                    return ['error' => 'AWS credentials file not found at configured path: ' . $credsFile];
+                }
+                $provider = \Aws\Credentials\CredentialProvider::ini($profile, $credsFile);
+            } else {
+                // Use default ~/.aws/credentials (standard AWS SDK behavior)
+                $homeDir = getenv('HOME') ?: getenv('USERPROFILE');
+                $defaultFile = $homeDir . DIRECTORY_SEPARATOR . '.aws' . DIRECTORY_SEPARATOR . 'credentials';
+                if (!file_exists($defaultFile)) {
+                    return ['error' => 'No AWS credentials file found. Set the credentials file path in settings, or create: ' . $defaultFile];
+                }
+                $provider = \Aws\Credentials\CredentialProvider::ini($profile, $defaultFile);
             }
 
-            $provider = \Aws\Credentials\CredentialProvider::ini($profile, $credsFile);
             $creds = $provider()->wait();
             return [
                 'access_key' => substr($creds->getAccessKeyId(), 0, 8) . '...',

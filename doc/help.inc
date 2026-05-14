@@ -20,6 +20,22 @@ $credentials = $awssdk->getCredentials();
 <h3>Configuration</h3>
 <p>Navigate to <em>Extensions &raquo; AWSSDK Module</em> in the admin panel to configure your authentication method. The form will show/hide relevant fields based on your selection.</p>
 
+<h3>Test Connection</h3>
+<p>After configuring your credentials, click the <strong>Test Connection</strong> button on the admin page to verify your setup. This will attempt to list S3 buckets in the <code>us-east-1</code> region using your configured credentials. A successful test confirms that:</p>
+<ul>
+  <li>The credentials file is readable by the web server</li>
+  <li>The profile name matches an entry in the credentials file</li>
+  <li>The access keys are valid and have S3 list permissions</li>
+</ul>
+
+<h3>File Permissions (Linux/WSL)</h3>
+<p>When using the AWS Profile method, the web server (e.g. Apache running as <code>www-data</code>) must be able to read your credentials file. If you get a "Cannot read credentials" error, fix permissions with:</p>
+<pre>sudo chmod 644 ~/.aws/credentials</pre>
+<p><strong>Note:</strong> This makes the file world-readable. For tighter security on shared servers, use group-based access instead:</p>
+<pre>sudo usermod -aG your_username www-data
+sudo chmod 640 ~/.aws/credentials
+sudo systemctl restart apache2</pre>
+
 <h3>For Module Developers</h3>
 <p>To use the AWS SDK in your own module:</p>
 <pre>

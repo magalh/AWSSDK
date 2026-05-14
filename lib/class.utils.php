@@ -136,11 +136,22 @@ final class utils
         if ($auth_method === 'profile') {
             $profile = $mod->GetPreference('aws_profile', 'default');
             $credsFile = $mod->GetPreference('credentials_file');
+            // Normalize Windows UNC WSL paths to native Linux paths
+            if ($credsFile && preg_match('#^\\\\\\\\wsl[.$]localhost\\\\[^\\\\]+(.+)$#i', $credsFile, $m)) {
+                $credsFile = str_replace('\\', '/', $m[1]);
+            }
             if ($credsFile && file_exists($credsFile)) {
                 $provider = \Aws\Credentials\CredentialProvider::ini($profile, $credsFile);
                 return $provider()->wait();
             }
-            // Fall back to default credentials file location
+            // Fall back to ~/.aws/credentials (standard AWS SDK behavior)
+            $homeDir = getenv('HOME') ?: getenv('USERPROFILE');
+            $defaultFile = $homeDir . DIRECTORY_SEPARATOR . '.aws' . DIRECTORY_SEPARATOR . 'credentials';
+            if (file_exists($defaultFile)) {
+                $provider = \Aws\Credentials\CredentialProvider::ini($profile, $defaultFile);
+                return $provider()->wait();
+            }
+            // Last resort: let SDK try its default provider chain
             $provider = \Aws\Credentials\CredentialProvider::ini($profile);
             return $provider()->wait();
         }
